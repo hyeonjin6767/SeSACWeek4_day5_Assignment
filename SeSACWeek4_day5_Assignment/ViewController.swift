@@ -10,7 +10,13 @@ import SnapKit
 
 class ViewController: UIViewController {
     
-    //let maintitleNaviItem = UINavigationItem()
+//    let maintitleNaviItem = UINavigationItem()
+//    let maintitleNavigationBar = {
+//        let navigationBar = UINavigationBar()
+//        navigationBar.translatesAutoresizingMaskIntoConstraints = false
+//        //navigationBar.titleTextAttributes =
+//        return navigationBar
+//    }
     let mainKeywordSearchBar = {
         let searchbar = UISearchBar()
         searchbar.placeholder = "브랜드, 프로필, 상품, 태그 등"
@@ -34,11 +40,11 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
         configureHiearachy()
         configureLayout()
         configureView()
-        
+//        maintitleNaviItem.titleView?.tintColor = .white
+//        maintitleNaviItem.title = "영캠러의 쇼핑쇼핑"
     }
 
 }
@@ -70,6 +76,7 @@ extension ViewController: DesignProtocol {
     }
     
     func configureView() {
+        view.backgroundColor = .black
         //maintitleNaviItem.titleView?.backgroundColor = .green
         //maintitleNaviItem.title = "영캠러의 쇼핑쇼핑"
     }
