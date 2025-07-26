@@ -19,13 +19,14 @@ class ShoppingViewController: UIViewController {
     
     let shoppingCollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        //collectionView.backgroundColor = .purple
         collectionView.backgroundColor = .black
         let layout = UICollectionViewFlowLayout()
         let deviceWidth = UIScreen.main.bounds.width
-        let cellWidth = deviceWidth - (5 * 2) - (12 * 1) //좌우여백 2개, 셀사이간격 1개
+        let cellWidth = deviceWidth - (10 * 2) - (10 * 1) //좌우여백 2개, 셀사이간격 1개
         layout.itemSize = CGSize(width: cellWidth/2, height: cellWidth/1.5) //셀 2개
-        layout.sectionInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
-        layout.minimumInteritemSpacing = 5
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        layout.minimumInteritemSpacing = 10
         layout.minimumLineSpacing = 30
         layout.scrollDirection = .vertical
         collectionView.collectionViewLayout = layout
@@ -39,7 +40,8 @@ class ShoppingViewController: UIViewController {
         configureLayout()
         configureView()
         
-        print("전달 받은 검색어: \(searchBarToss)")
+        self.navigationItem.title = "\(searchBarToss)"
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         callRequst(query: searchBarToss)
     }
     
@@ -95,7 +97,6 @@ extension ShoppingViewController: DesignProtocol {
         
         shoppingCollectionView.delegate = self
         shoppingCollectionView.dataSource = self
-        
     }
     
     func configureLayout() {

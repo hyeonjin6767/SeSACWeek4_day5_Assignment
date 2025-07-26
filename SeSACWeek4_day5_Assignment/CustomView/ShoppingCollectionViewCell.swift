@@ -22,14 +22,17 @@ class ShoppingCollectionViewCell: UICollectionViewCell {
     }()
     let shoppingMallNameLabel = {
         let label = ShoppingLabel(textColor: .white, font: .systemFont(ofSize: 12), numberOfLines: 0)
+        //label.backgroundColor = .red
         return label
     }()
     let shoppingTitleLabel = {
         let label = ShoppingLabel(textColor: .white, font: .systemFont(ofSize: 15), numberOfLines: 2)
+        //label.backgroundColor = .blue
         return label
     }()
     let shoppingPriceLabel = {
         let label = ShoppingLabel(textColor: .white, font: .boldSystemFont(ofSize: 17), numberOfLines: 0)
+        //label.backgroundColor = .brown
         return label
     }()
     
@@ -70,11 +73,11 @@ extension ShoppingCollectionViewCell: DesignProtocol {
         shoppingPriceLabel.snp.makeConstraints { make in
             make.horizontalEdges.equalTo(contentView.safeAreaLayoutGuide).inset(15)
             make.top.equalTo(shoppingTitleLabel.snp.bottom).offset(5)
-            //make.bottom.equalTo(contentView.safeAreaLayoutGuide.snp.bottom)
+            //make.bottom.equalTo(contentView.safeAreaLayoutGuide.snp.bottom).inset(5)
         }
     }
     
     func configureView() {
-        contentView.backgroundColor = .black
+        //contentView.backgroundColor = .orange
     }
 }

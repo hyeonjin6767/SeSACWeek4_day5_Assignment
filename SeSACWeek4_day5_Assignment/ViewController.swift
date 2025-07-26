@@ -45,9 +45,9 @@ class ViewController: UIViewController {
         configureHiearachy()
         configureLayout()
         configureView()
-        
-//        maintitleNaviItem.titleView?.tintColor = .white
-//        maintitleNaviItem.title = "영캠러의 쇼핑쇼핑"
+        self.navigationItem.title = "영캠러의 쇼핑쇼핑"
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        //navigationController?.navigationItem.backButtonTitle = ""
     }
 }
 
@@ -69,7 +69,7 @@ extension ViewController: UISearchBarDelegate {
 extension ViewController: DesignProtocol {
     
     func configureHiearachy() {
-        //ViewController.addSubview(maintitleNaviItem)
+        //view.addSubview(maintitleNaviItem)
         view.addSubview(mainKeywordSearchBar)
         view.addSubview(mainImageView)
         view.addSubview(mainLabel)
@@ -96,7 +96,5 @@ extension ViewController: DesignProtocol {
         view.backgroundColor = .black
         mainImageView.image = UIImage(named: "쇼핑하구팡")
         mainKeywordSearchBar.delegate = self
-        //maintitleNaviItem.titleView?.backgroundColor = .green
-        //maintitleNaviItem.title = "영캠러의 쇼핑쇼핑"
     }
 }
