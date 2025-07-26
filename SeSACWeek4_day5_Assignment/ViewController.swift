@@ -43,10 +43,25 @@ class ViewController: UIViewController {
         configureHiearachy()
         configureLayout()
         configureView()
+        
 //        maintitleNaviItem.titleView?.tintColor = .white
 //        maintitleNaviItem.title = "영캠러의 쇼핑쇼핑"
     }
+}
 
+//검색어 전달
+extension ViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        print(#function)
+        guard let input = searchBar.text, input.count >= 2 else {
+            print("2글자 미만 입력")
+            return
+        }
+        let vc = ShoppingViewController()
+        vc.searchBarToss = "\(searchBar.text!)"
+        vc.shoppingCollectionView.reloadData()
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 extension ViewController: DesignProtocol {
@@ -77,6 +92,8 @@ extension ViewController: DesignProtocol {
     
     func configureView() {
         view.backgroundColor = .black
+        mainKeywordSearchBar.delegate = self
+        mainKeywordSearchBar.showsCancelButton = true
         //maintitleNaviItem.titleView?.backgroundColor = .green
         //maintitleNaviItem.title = "영캠러의 쇼핑쇼핑"
     }
