@@ -21,25 +21,15 @@ class ShoppingCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
     let shoppingMallNameLabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 12)
-        label.numberOfLines = 0
-        label.textColor = .white
+        let label = ShoppingLabel(textColor: .white, font: .systemFont(ofSize: 12), numberOfLines: 0)
         return label
     }()
     let shoppingTitleLabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 15)
-        label.textColor = .white
-        label.numberOfLines = 2
+        let label = ShoppingLabel(textColor: .white, font: .systemFont(ofSize: 15), numberOfLines: 2)
         return label
     }()
     let shoppingPriceLabel = {
-        let label = UILabel()
-        //label.font = .systemFont(ofSize: 20)
-        label.numberOfLines = 0
-        label.textColor = .white
-        label.font = .boldSystemFont(ofSize: 17)
+        let label = ShoppingLabel(textColor: .white, font: .boldSystemFont(ofSize: 17), numberOfLines: 0)
         return label
     }()
     
