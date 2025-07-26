@@ -19,10 +19,12 @@ class ViewController: UIViewController {
 //    }
     let mainKeywordSearchBar = {
         let searchbar = UISearchBar()
-        searchbar.placeholder = "브랜드, 프로필, 상품, 태그 등"
-        searchbar.backgroundColor = .black
-        searchbar.barTintColor = .darkGray
-        searchbar.tintColor = .gray
+        searchbar.searchTextField.attributedPlaceholder = NSAttributedString(string: "브랜드, 프로필, 상품, 태그 등", attributes: [NSAttributedString.Key.foregroundColor:UIColor.systemGray3])
+        searchbar.searchTextField.leftView?.tintColor = .systemGray3
+        searchbar.searchBarStyle = .minimal
+        searchbar.searchTextField.layer.cornerRadius = 10
+        //searchbar.searchTextField.alpha = 0.9
+        searchbar.searchTextField.backgroundColor = .darkGray
         return searchbar
     }()
     let mainImageView = {
@@ -81,8 +83,8 @@ extension ViewController: DesignProtocol {
         }
         mainImageView.snp.makeConstraints { make in
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(50)
-            make.top.equalTo(mainKeywordSearchBar.snp.bottom).offset(100)
-            make.height.equalTo(200)
+            make.top.equalTo(mainKeywordSearchBar.snp.bottom).offset(170)
+            make.height.equalTo(230)
         }
         mainLabel.snp.makeConstraints { make in
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
@@ -92,8 +94,8 @@ extension ViewController: DesignProtocol {
     
     func configureView() {
         view.backgroundColor = .black
+        mainImageView.image = UIImage(named: "쇼핑하구팡")
         mainKeywordSearchBar.delegate = self
-        mainKeywordSearchBar.showsCancelButton = true
         //maintitleNaviItem.titleView?.backgroundColor = .green
         //maintitleNaviItem.title = "영캠러의 쇼핑쇼핑"
     }
