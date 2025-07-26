@@ -19,13 +19,14 @@ class ShoppingViewController: UIViewController {
     
     let shoppingCollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        collectionView.backgroundColor = .black
         let layout = UICollectionViewFlowLayout()
         let deviceWidth = UIScreen.main.bounds.width
-        let cellWidth = deviceWidth - (10 * 2) - (10 * 1) //좌우여백 2개, 셀사이간격 1개
+        let cellWidth = deviceWidth - (5 * 2) - (12 * 1) //좌우여백 2개, 셀사이간격 1개
         layout.itemSize = CGSize(width: cellWidth/2, height: cellWidth/1.5) //셀 2개
-        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        layout.minimumInteritemSpacing = 10
-        layout.minimumLineSpacing = 10
+        layout.sectionInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        layout.minimumInteritemSpacing = 5
+        layout.minimumLineSpacing = 30
         layout.scrollDirection = .vertical
         collectionView.collectionViewLayout = layout
         collectionView.register(ShoppingCollectionViewCell.self, forCellWithReuseIdentifier: ShoppingCollectionViewCell.identifier)
@@ -45,7 +46,7 @@ class ShoppingViewController: UIViewController {
     //네이버 API 요청
     func callRequst(query: String) {
         print(#function, "첫번째")
-        let url = "https://openapi.naver.com/v1/search/shop.json?query=\(query)&display=10" //100개로 변경
+        let url = "https://openapi.naver.com/v1/search/shop.json?query=\(query)&display=100"
         let header: HTTPHeaders = ["X-Naver-Client-Id": "xA5LXXctMDL0kfcaEa4x",
                                    "X-Naver-Client-Secret": "xspwBdaWWj"]
         AF.request(url, method: .get, headers: header)
@@ -104,7 +105,7 @@ extension ShoppingViewController: DesignProtocol {
     }
     
     func configureView() {
-        view.backgroundColor = .white
-        shoppingCollectionView.keyboardDismissMode = .onDrag
+        view.backgroundColor = .black
+        //shoppingCollectionView.keyboardDismissMode = .onDrag
     }
 }
