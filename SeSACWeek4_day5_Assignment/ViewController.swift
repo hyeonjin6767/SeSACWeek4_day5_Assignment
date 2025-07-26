@@ -6,14 +6,71 @@
 //
 
 import UIKit
+import SnapKit
 
 class ViewController: UIViewController {
-
+    
+    //let maintitleNaviItem = UINavigationItem()
+    let mainKeywordSearchBar = {
+        let searchbar = UISearchBar()
+        searchbar.placeholder = "브랜드, 프로필, 상품, 태그 등"
+        searchbar.backgroundColor = .black
+        searchbar.barTintColor = .darkGray
+        searchbar.tintColor = .gray
+        return searchbar
+    }()
+    let mainImageView = {
+        let imageView = UIImageView()
+        imageView.backgroundColor = .purple
+        return imageView
+    }()
+    let mainLabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.text = "쇼핑하구팡"
+        label.textAlignment = .center
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        view.backgroundColor = .black
+        configureHiearachy()
+        configureLayout()
+        configureView()
+        
     }
-
 
 }
 
+extension ViewController: DesignProtocol {
+    
+    func configureHiearachy() {
+        //ViewController.addSubview(maintitleNaviItem)
+        view.addSubview(mainKeywordSearchBar)
+        view.addSubview(mainImageView)
+        view.addSubview(mainLabel)
+    }
+    
+    func configureLayout() {
+        
+        mainKeywordSearchBar.snp.makeConstraints { make in
+            make.horizontalEdges.top.equalTo(view.safeAreaLayoutGuide).inset(10)
+            make.height.equalTo(44)
+        }
+        mainImageView.snp.makeConstraints { make in
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(50)
+            make.top.equalTo(mainKeywordSearchBar.snp.bottom).offset(100)
+            make.height.equalTo(200)
+        }
+        mainLabel.snp.makeConstraints { make in
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(mainImageView.snp.bottom).offset(10)
+        }
+    }
+    
+    func configureView() {
+        //maintitleNaviItem.titleView?.backgroundColor = .green
+        //maintitleNaviItem.title = "영캠러의 쇼핑쇼핑"
+    }
+}
