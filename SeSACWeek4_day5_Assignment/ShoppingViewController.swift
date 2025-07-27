@@ -13,7 +13,6 @@ import Alamofire
 class ShoppingViewController: UIViewController {
     
     static let identifier = "ShoppingViewController"
-    //var url = "https://openapi.naver.com/v1/search/shop.json?query="
     
     var shoppingList: ShoppingList = ShoppingList(items: [])
     var searchBarToss: String = ""
@@ -49,37 +48,21 @@ class ShoppingViewController: UIViewController {
         return label
     }()
     let sortSimButton = {
-        let button = UIButton()
-        button.setTitle("정확도", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-        button.layer.cornerRadius = 10
-        button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.white.cgColor
+        let button = SortButton(setTitle: "정확도")
         return button
     }()
     let sortDateButton = {
-        let button = UIButton()
-        button.setTitle("날짜순", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        let button = SortButton(setTitle: "날짜순")
         return button
     }()
     let sortDscButton = {
-        let button = UIButton()
-        button.setTitle("가격높은순", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        let button = SortButton(setTitle: "가격높은순")
         return button
     }()
     let sortAscButton = {
-        let button = UIButton()
-        button.setTitle("가격낮은순", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        let button = SortButton(setTitle: "가격낮은순")
         return button
     }()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -139,7 +122,7 @@ class ShoppingViewController: UIViewController {
             case .success(let value):
                 print("success")
                 
-                url.removeLast(18) //함정: 100개에서 10로 바뀜...........................
+                url.removeLast(18) //함정: 100개에서 10로 바뀜..........
                 print("url삭제체크 : \(url)")
                 
                 dump(value)
@@ -188,11 +171,6 @@ extension ShoppingViewController: DesignProtocol {
         sortButtonStackView.addArrangedSubview(sortDateButton)
         sortButtonStackView.addArrangedSubview(sortDscButton)
         sortButtonStackView.addArrangedSubview(sortAscButton)
-//
-//        view.addSubview(sortSimButton)
-//        view.addSubview(sortDateButton)
-//        view.addSubview(sortAscButton)
-//        view.addSubview(sortDscButton)
     }
     
     func configureLayout() {
@@ -207,7 +185,13 @@ extension ShoppingViewController: DesignProtocol {
             make.height.equalTo(50)
         }
         
-        //글자 길이만큼 바뀌는 동적 높이에서 부등호 설정은 어떻게?
+        
+        //월욜 질문 모음
+        //동적 높이에서 부등호 설정은 코드로 어떻게?
+        //자꾸 스택뷰에 의존하게 되도 될까
+        //문법을 완전히 익히지 못하고 공식처럼 방법들을 적용하는거 같은데 이 순서가 맞는건가
+        //네비게이션은 기본 포함
+        
         
 //        sortSimButton.snp.makeConstraints { make in
 //            make.top.equalTo(totalLabel.snp.bottom).inset(5)
@@ -240,6 +224,8 @@ extension ShoppingViewController: DesignProtocol {
 //            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-10)
 //            make.height.equalTo(30)
 //        }
+        
+        
         shoppingCollectionView.snp.makeConstraints { make in
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
             make.top.equalTo(sortButtonStackView.snp.bottom).offset(5)
