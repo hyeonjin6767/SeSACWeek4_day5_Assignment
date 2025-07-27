@@ -47,6 +47,8 @@ class ViewController: UIViewController {
         configureView()
         self.navigationItem.title = "영캠러의 쇼핑쇼핑"
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.tintColor = .white
+        self.navigationController?.navigationBar.topItem?.title = ""
         //navigationController?.navigationItem.backButtonTitle = ""
     }
 }

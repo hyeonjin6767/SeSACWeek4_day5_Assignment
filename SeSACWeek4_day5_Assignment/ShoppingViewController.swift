@@ -82,6 +82,9 @@ class ShoppingViewController: UIViewController {
         sortDateButton.addTarget(self, action: #selector(sortDateButtomClicked), for: .touchUpInside)
         sortDscButton.addTarget(self, action: #selector(sortDscButtomClicked), for: .touchUpInside)
         sortAscButton.addTarget(self, action: #selector(sortAscButtomClicked), for: .touchUpInside)
+        
+        self.navigationController?.navigationBar.tintColor = .white
+        self.navigationController?.navigationBar.topItem?.title = ""
     }
     
     @objc func sortSimButtomClicked() {
