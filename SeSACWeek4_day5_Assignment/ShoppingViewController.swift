@@ -16,6 +16,7 @@ class ShoppingViewController: UIViewController {
     
     var shoppingList: ShoppingList = ShoppingList(items: [])
     var searchBarToss: String = ""
+    let priceFormat = NumberFormatter()
     
     let shoppingCollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -153,7 +154,8 @@ extension ShoppingViewController: UICollectionViewDelegate, UICollectionViewData
         cell.shoppoingImageView.kf.setImage(with: url)
         cell.shoppingMallNameLabel.text = shoppingList.items[indexPath.item].mallName
         cell.shoppingTitleLabel.text = shoppingList.items[indexPath.item].title
-        cell.shoppingPriceLabel.text = shoppingList.items[indexPath.item].lprice
+        priceFormat.numberStyle = .decimal
+        cell.shoppingPriceLabel.text = priceFormat.string(for: Int(shoppingList.items[indexPath.item].lprice))
         return cell
     }
 }
@@ -191,6 +193,7 @@ extension ShoppingViewController: DesignProtocol {
         //자꾸 스택뷰에 의존하게 되도 될까
         //문법을 완전히 익히지 못하고 공식처럼 방법들을 적용하는거 같은데 이 순서가 맞는건가
         //네비게이션은 기본 포함
+        //스크롤시에 위에 하얗게
         
         
 //        sortSimButton.snp.makeConstraints { make in
