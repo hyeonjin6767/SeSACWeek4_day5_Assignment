@@ -11,7 +11,8 @@ import Foundation
 //거꾸로 짜기, Decodable빼먹지 않기
 
 struct ShoppingList: Decodable {
-    let items: [ProductsList]
+    let total: Int
+    var items: [ProductsList]
 }
 
 struct ProductsList: Decodable {

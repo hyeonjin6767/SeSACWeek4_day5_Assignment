@@ -14,7 +14,13 @@ class ShoppingViewController: UIViewController {
     
     static let identifier = "ShoppingViewController"
     
-    var shoppingList: ShoppingList = ShoppingList(items: [])
+    var list: [ProductsList] = []
+    var total: Int = 0
+    var page = 1
+    var count = 0
+
+    
+    //var shoppingList: [ProductsList] = []
     var searchBarToss: String = ""
     let priceFormat = NumberFormatter()
     
@@ -76,6 +82,7 @@ class ShoppingViewController: UIViewController {
         navigationController?.navigationBar.backItem?.backButtonDisplayMode = .minimal
         navigationController?.navigationBar.backgroundColor = .black
         
+        count = 30
         callRequst(sort: "")
         
         sortSimButton.addTarget(self, action: #selector(sortSimButtomClicked), for: .touchUpInside)
@@ -89,25 +96,43 @@ class ShoppingViewController: UIViewController {
     
     @objc func sortSimButtomClicked() {
         print("정확도 버튼 눌림")
+        //list.removeAll()
+        page = 1
+        count = 0
+        shoppingCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
         callRequst(sort: "&start=1&sort=sim")
     }
     @objc func sortDateButtomClicked() {
         print("날짜순 버튼 눌림")
+        //list.removeAll()
+        page = 1
+        count = 0
+        shoppingCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
         callRequst(sort: "&start=1&sort=date")
     }
     @objc func sortDscButtomClicked() {
         print("가격높은순 버튼 눌림")
+        //list.removeAll()
+        page = 1
+        count = 0
+        shoppingCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
         callRequst(sort: "&start=1&sort=dsc")
+
     }
     @objc func sortAscButtomClicked() {
         print("가격낮은순 버튼 눌림")
+        //list.removeAll()
+        page = 1
+        count = 0
+        shoppingCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
         callRequst(sort: "&start=1&sort=asc")
     }
     
     //네이버 API 요청
     func callRequst(sort: String) {
         print(#function, "첫번째")
-        var url = "https://openapi.naver.com/v1/search/shop.json?query=\(searchBarToss)&display=100"
+        //var url = "https://openapi.naver.com/v1/search/shop.json?query=\(searchBarToss)&display=100"
+        var url = "https://openapi.naver.com/v1/search/shop.json?query=\(searchBarToss)&display=\(count)"
         if sort == "" {
             print("정렬버튼X")
         } else {
@@ -126,11 +151,13 @@ class ShoppingViewController: UIViewController {
             case .success(let value):
                 print("success")
                 
-                url.removeLast(18) //함정: 100개에서 10로 바뀜..........
+                if let range = url.range(of: sort) {
+                    url.removeSubrange(range)
+                }
                 print("url삭제체크 : \(url)")
-                
                 dump(value)
-                self.shoppingList = value
+                self.list.append(contentsOf: value.items)
+                self.total = value.total
                 self.shoppingCollectionView.reloadData()
     
             case .failure(let error):
@@ -146,20 +173,38 @@ extension ShoppingViewController: UICollectionViewDelegate, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         print(#function)
-        totalLabel.text = "\(shoppingList.items.count)개의 검색결과"
-        return shoppingList.items.count
+        //totalLabel.text = "\(shoppingList.items.count)개의 검색결과"
+        totalLabel.text = "\(list.count)개의 검색결과"
+        return list.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         print(#function)
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingCollectionViewCell.identifier, for: indexPath) as! ShoppingCollectionViewCell
-        let url = URL(string: shoppingList.items[indexPath.item].image)
-        cell.shoppoingImageView.kf.setImage(with: url)
-        cell.shoppingMallNameLabel.text = shoppingList.items[indexPath.item].mallName
-        cell.shoppingTitleLabel.text = shoppingList.items[indexPath.item].title
-        priceFormat.numberStyle = .decimal
-        cell.shoppingPriceLabel.text = priceFormat.string(for: Int(shoppingList.items[indexPath.item].lprice))
-        return cell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingCollectionViewCell.identifier, for: indexPath) as! ShoppingCollectionViewCell
+            print("indexPath.item체크 :\(indexPath.item)")
+            let item = list[indexPath.item]
+            let url = URL(string: item.image)
+            cell.shoppoingImageView.kf.setImage(with: url)
+            cell.shoppingMallNameLabel.text = item.mallName
+            cell.shoppingTitleLabel.text = item.title
+            priceFormat.numberStyle = .decimal
+            cell.shoppingPriceLabel.text = priceFormat.string(for: Int(item.lprice))
+            return cell
+    }
+    
+    //페이지네이션
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        //30 > 60 > 90 > 120
+        // 9 > 39 > 69 > 99
+        // 1 > 2 > 3 > 4
+        print("indexPath.item : \(indexPath.item) ,list.count: \(list.count), self.total: \(self.total),")
+        if indexPath.item == (list.count - 21) && count < 100 {
+            //print("count : \(count)")
+            count += 30
+            //page += 1
+            //print("page : \(page)")
+            callRequst(sort: "")
+        }
     }
 }
 
@@ -192,13 +237,13 @@ extension ShoppingViewController: DesignProtocol {
         
         
         //월욜 질문 모음
-        //동적 높이에서 부등호 설정은 코드로 어떻게?
-        //자꾸 스택뷰에 의존하게 되도 될까
-        //문법을 완전히 익히지 못하고 공식처럼 방법들을 적용하는거 같은데 이 순서가 맞는건가
-        //네비게이션은 기본 포함
-        //스크롤시에 위에 하얗게
+        //동적 높이에서 부등호 설정은 코드로 어떻게? :greaterThanOrEqualTo,lessThanOrEqualTo 같은 것들이 존재
+        //자꾸 스택뷰에 의존하게 되도 될까 : 지금은 괜춘
+        //문법을 완전히 익히지 못하고 공식처럼 방법들을 적용하는거 같은데 이 순서가 맞는건가 : 이하 동문
+        //네비게이션은 기본 포함 : 이번주 예정
+        //스크롤시에 위에 하얗게 :  이번주 예정
         
-        
+        //
 //        sortSimButton.snp.makeConstraints { make in
 //            make.top.equalTo(totalLabel.snp.bottom).inset(5)
 //            make.leading.equalTo(view.safeAreaLayoutGuide).offset(10)

@@ -17,7 +17,7 @@ class ShoppingCollectionViewCell: UICollectionViewCell {
         imageView.layer.cornerRadius = 15 //클래스로 빼보기
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
-        imageView.backgroundColor = .blue
+        //imageView.backgroundColor = .blue
         return imageView
     }()
     let shoppingMallNameLabel = {
@@ -46,6 +46,7 @@ class ShoppingCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
 }
 
 extension ShoppingCollectionViewCell: DesignProtocol {
