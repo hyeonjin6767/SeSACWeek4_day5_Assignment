@@ -17,7 +17,7 @@ class ShoppingViewController: UIViewController {
     var list: [ProductsList] = []
     var total: Int = 0
     var page = 1
-    var count = 0
+    var count = 1
 
     
     //var shoppingList: [ProductsList] = []
@@ -83,7 +83,9 @@ class ShoppingViewController: UIViewController {
         navigationController?.navigationBar.backgroundColor = .black
         
         count = 30
-        callRequst(sort: "")
+        //callRequst(sort: "")
+        //callRequst(start: 2, sort: "")
+        callRequst(count: 30, start: 1, sort: "")
         
         sortSimButton.addTarget(self, action: #selector(sortSimButtomClicked), for: .touchUpInside)
         sortDateButton.addTarget(self, action: #selector(sortDateButtomClicked), for: .touchUpInside)
@@ -96,48 +98,66 @@ class ShoppingViewController: UIViewController {
     
     @objc func sortSimButtomClicked() {
         print("정확도 버튼 눌림")
-        //list.removeAll()
+        list.removeAll()
         page = 1
-        count = 0
-        shoppingCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
-        callRequst(sort: "&start=1&sort=sim")
+        count = 30
+        //callRequst(sort: "&start=1&sort=sim")
+        //callRequst(start: 1, sort: "sim")
+        callRequst(count: 30, start: 1, sort: "&start=1&sort=sim")
+
     }
     @objc func sortDateButtomClicked() {
         print("날짜순 버튼 눌림")
-        //list.removeAll()
+        list.removeAll()
         page = 1
-        count = 0
-        shoppingCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
-        callRequst(sort: "&start=1&sort=date")
+        count = 30
+        //callRequst(sort: "&start=1&sort=date")
+        //callRequst(start: 1, sort: "date")
+        callRequst(count: 30, start: 1, sort: "&start=1&sort=date")
+
     }
     @objc func sortDscButtomClicked() {
         print("가격높은순 버튼 눌림")
-        //list.removeAll()
+        list.removeAll()
         page = 1
-        count = 0
-        shoppingCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
-        callRequst(sort: "&start=1&sort=dsc")
+        count = 30
+        //callRequst(sort: "&start=1&sort=dsc")
+        //callRequst(start: 1, sort: "dsc")
+        callRequst(count: 30, start: 1, sort: "&start=1&sort=dsc")
+
 
     }
     @objc func sortAscButtomClicked() {
         print("가격낮은순 버튼 눌림")
-        //list.removeAll()
+        list.removeAll()
         page = 1
-        count = 0
-        shoppingCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
-        callRequst(sort: "&start=1&sort=asc")
+        count = 30
+        //callRequst(sort: "&start=1&sort=asc")
+        //callRequst(start: 1, sort: "asc")
+        callRequst(count: 30, start: 1, sort: "&start=1&sort=asc")
     }
     
     //네이버 API 요청
-    func callRequst(sort: String) {
-        print(#function, "첫번째")
+    func callRequst(count: Int, start: Int, sort: String) {
+        print("sort는 \(sort)")
+
+        //print(#function, "첫번째")
+        print("count는\(count)")
         //var url = "https://openapi.naver.com/v1/search/shop.json?query=\(searchBarToss)&display=100"
-        var url = "https://openapi.naver.com/v1/search/shop.json?query=\(searchBarToss)&display=\(count)"
-        if sort == "" {
-            print("정렬버튼X")
-        } else {
-            url.append(sort)
-        }
+        //var url = ""
+        //var url2 = "https://openapi.naver.com/v1/search/shop.json?query=\(searchBarToss)&display=30"
+//        if start == 1 {
+//            url1.append(sort)
+//            url = url1
+//        } else {
+//            url = url2
+//        }
+        
+        var url = "https://openapi.naver.com/v1/search/shop.json?query=\(searchBarToss)&display=30"
+
+        print("정렬버튼X")
+        url.append(sort)
+        
         //url.append("\(query)&display=100")
         print("url체크 : \(url)")
         let header: HTTPHeaders = ["X-Naver-Client-Id": "xA5LXXctMDL0kfcaEa4x",
@@ -145,7 +165,7 @@ class ShoppingViewController: UIViewController {
         AF.request(url, method: .get, headers: header)
             .validate(statusCode: 200..<300)
             .responseDecodable(of: ShoppingList.self) { response in
-            print(#function, "두번째")
+            //print(#function, "두번째")
                 print("url체크 : \(url)")
             switch response.result {
             case .success(let value):
@@ -155,16 +175,34 @@ class ShoppingViewController: UIViewController {
                     url.removeSubrange(range)
                 }
                 print("url삭제체크 : \(url)")
-                dump(value)
+                //dump(value)
                 self.list.append(contentsOf: value.items)
                 self.total = value.total
                 self.shoppingCollectionView.reloadData()
+                if start == 1 {
+                    self.shoppingCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
+                }
+//                var check = 0
+//                if sort != "" {
+//                    check = 1
+//                }
+//                if check == 1 {
+//                    print("정렬버튼이니까 url 지우지마")
+//                } else if check == 0 {
+//                    print("정렬버튼아니어서 url 뒤에 지우자")
+//                    if let range = url.range(of: "&start=1&sort=\(sort)") {
+//                        url.removeSubrange(range)
+//                    }
+//                    print("url삭제체크 : \(url)")
+//                }
+
     
             case .failure(let error):
+                self.showAlert(title: "데이터를 가져오는데 실패했습니다.", message: "", ok: "확인")
                 print("fail", error)
             }
         }
-        print(#function, "세번째")
+        //print(#function, "세번째")
         print("url체크 : \(url)")
     }
 }
@@ -194,16 +232,23 @@ extension ShoppingViewController: UICollectionViewDelegate, UICollectionViewData
     
     //페이지네이션
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        //30 > 60 > 90 > 120
-        // 9 > 39 > 69 > 99
+        // 30 > 60 > 90 > 120
+        // 27 > 57 > 87 > 117
         // 1 > 2 > 3 > 4
         print("indexPath.item : \(indexPath.item) ,list.count: \(list.count), self.total: \(self.total),")
-        if indexPath.item == (list.count - 21) && count < 100 {
-            //print("count : \(count)")
-            count += 30
-            //page += 1
-            //print("page : \(page)")
-            callRequst(sort: "")
+        //(list.count - 3)의 의미 : 다 보여주기 3개쯤 전에 미리 호출
+        if indexPath.item == (list.count - 3) && list.count < total { //네이버에서 제공하는 display(한번에 보여줄 수 있는 데이터 갯수) 최대값100, 여기선 30으로 설정: 30개로 최대 갯수를 설정했으니 27번째 데이터 보일때쯤 데이터 호출
+            print("현재 \(page)페이지 , 추정 페이지 \(total / 30)개")
+            if list.count < total {
+                //count += 27
+                print("if안 list : 데이터 갯수 \(list.count)개")
+                print("if안 page : \(page)페이지")
+                page += 1
+                count += 30
+                //callRequst(sort: "")
+                //callRequst(start: count, sort: "")
+                callRequst(count: count, start: count, sort: "")
+            }
         }
     }
 }
