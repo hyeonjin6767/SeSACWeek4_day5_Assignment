@@ -30,14 +30,14 @@ class ShoppingViewController: UIViewController {
     
     let recommendCollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-        collectionView.backgroundColor = .blue
+        collectionView.backgroundColor = .black
         let layout = UICollectionViewFlowLayout()
         let deviceWidth = UIScreen.main.bounds.width
         let cellWidth = deviceWidth - (10 * 2) - (10 * 3) //좌우여백 2개, 셀사이간격 3개
-        layout.itemSize = CGSize(width: cellWidth/4, height: cellWidth/4) //셀 2개
+        layout.itemSize = CGSize(width: cellWidth/4, height: cellWidth/4) //셀 4개
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        layout.minimumInteritemSpacing = 0
-        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 5
+        layout.minimumLineSpacing = 5
         layout.scrollDirection = .horizontal
         collectionView.collectionViewLayout = layout
         collectionView.register(RecommendCollectionViewCell.self, forCellWithReuseIdentifier: RecommendCollectionViewCell.identifier)
@@ -46,7 +46,6 @@ class ShoppingViewController: UIViewController {
     
     let shoppingCollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-        //collectionView.backgroundColor = .purple
         collectionView.backgroundColor = .black
         let layout = UICollectionViewFlowLayout()
         let deviceWidth = UIScreen.main.bounds.width
@@ -111,6 +110,7 @@ class ShoppingViewController: UIViewController {
         
         self.navigationController?.navigationBar.tintColor = .white
         self.navigationController?.navigationBar.topItem?.title = ""
+        
     }
     
     @objc func sortSimButtomClicked() {
@@ -189,12 +189,23 @@ class ShoppingViewController: UIViewController {
                 
                 self.list.append(contentsOf: value.items)
                 self.total = value.total
-                self.shoppingCollectionView.reloadData()
+                
+                self.shoppingCollectionView.reloadData() //데이터 갱신 후 잊지 않기!
+                self.recommendCollectionView.reloadData()
+
                 if start == 1 {
                     self.shoppingCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
                 }
 
             case .failure(let error):
+//                print(response.result) //다 찍어보기!!
+//                print(response.response)
+//                print(response.request)
+//                print(response.data)
+//                print(response.error)
+//                print(response.metrics)
+//                print(response.value)
+                
                 self.showAlert(title: "데이터를 가져오는데 실패했습니다.", message: "", ok: "확인")
                 print("fail", error)
             }
@@ -208,15 +219,41 @@ extension ShoppingViewController: UICollectionViewDelegate, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         print(#function)
-        //totalLabel.text = "\(shoppingList.items.count)개의 검색결과"
-        totalLabel.text = "\(list.count)개의 검색결과"
-        return list.count
+        //totalLabel.text = "\(list.count)개의 검색결과"
+        totalLabel.text = "\(total)개의 검색결과"
+
+        
+        
+        if collectionView == recommendCollectionView {
+            print("카운트체크1 \(list.count)")
+            return list.count
+        } else {
+            print("카운트체크2 \(list.count)")
+            return list.count
+        }
+
+        
+        
+        
+        //return list.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         print(#function)
+        //let bottomCell =  collectionView.dequeueReusableCell(withReuseIdentifier: RecommendCollectionViewCell.identifier, for: indexPath) as! RecommendCollectionViewCell
+        //print("indexPath.item체크 :\(indexPath.item)")
+        
+        if collectionView == recommendCollectionView {
+            print("체크1")
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendCollectionViewCell.identifier, for: indexPath) as! RecommendCollectionViewCell
+            
+            let item = list[indexPath.item]
+            let url = URL(string: item.image)
+            cell.recommendImageView.kf.setImage(with: url)
+            return cell
+        } else {
+            print("체크2")
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingCollectionViewCell.identifier, for: indexPath) as! ShoppingCollectionViewCell
-            print("indexPath.item체크 :\(indexPath.item)")
             let item = list[indexPath.item]
             let url = URL(string: item.image)
             cell.shoppoingImageView.kf.setImage(with: url)
@@ -225,6 +262,7 @@ extension ShoppingViewController: UICollectionViewDelegate, UICollectionViewData
             priceFormat.numberStyle = .decimal
             cell.shoppingPriceLabel.text = priceFormat.string(for: Int(item.lprice))
             return cell
+        }
     }
     
     //페이지네이션
@@ -243,7 +281,6 @@ extension ShoppingViewController: UICollectionViewDelegate, UICollectionViewData
                 callRequst(page: page, start: count, sortIndex: buttonCheck)
             }
         }
-        url = ""
     }
 }
 
@@ -252,6 +289,9 @@ extension ShoppingViewController: DesignProtocol {
     func configureHiearachy() {
         shoppingCollectionView.delegate = self
         shoppingCollectionView.dataSource = self
+        
+        recommendCollectionView.delegate = self
+        recommendCollectionView.dataSource = self
         
         view.addSubview(shoppingCollectionView)
         view.addSubview(recommendCollectionView)
@@ -321,12 +361,12 @@ extension ShoppingViewController: DesignProtocol {
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
             make.top.equalTo(sortButtonStackView.snp.bottom).offset(5)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
-            //make.edges.equalTo(view.safeAreaLayoutGuide)
+            //make.bottom.equalTo(recommendCollectionView.snp.top).offset(-10)
         }
         recommendCollectionView.snp.makeConstraints { make in
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-            make.height.equalTo(100)
+            make.height.equalTo(120)
         }
         
     }

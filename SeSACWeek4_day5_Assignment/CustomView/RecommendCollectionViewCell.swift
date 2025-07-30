@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class RecommendCollectionViewCell: UICollectionViewCell {
     
@@ -13,10 +14,10 @@ class RecommendCollectionViewCell: UICollectionViewCell {
     
     let recommendImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .purple
+        imageView.backgroundColor = .black
+        imageView.layer.cornerRadius = 15
+        imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.borderWidth = 30
-        imageView.layer.borderColor = UIColor.yellow.cgColor
         return imageView
     }()
     
@@ -41,7 +42,9 @@ extension RecommendCollectionViewCell: DesignProtocol {
     
     func configureLayout() {
         recommendImageView.snp.makeConstraints { make in
-            make.edges.equalTo(contentView.safeAreaLayoutGuide)
+            make.horizontalEdges.equalTo(contentView.safeAreaLayoutGuide)
+            //make.edges.equalTo(contentView.safeAreaLayoutGuide)
+            make.height.width.equalTo(100)
         }
     }
     
